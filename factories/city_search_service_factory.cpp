@@ -4,14 +4,14 @@
 #include <QDebug>
 
 std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createService(
-    ServiceType type, QObject* parent)
+    const ServiceType type, QObject* parent)
 {
-    ServiceConfiguration defaultConfig;
+    const ServiceConfiguration defaultConfig;
     return createService(type, defaultConfig, parent);
 }
 
 std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createService(
-    ServiceType type, const ServiceConfiguration& config, QObject* parent)
+    const ServiceType type, const ServiceConfiguration& config, QObject* parent)
 {
     qDebug() << "Creating service:" << serviceTypeToString(type);
     
@@ -77,6 +77,8 @@ bool CitySearchServiceFactory::requiresApiKey(ServiceType type)
     case ServiceType::Nominatim:
     case ServiceType::Mock:
         return false;
+    case ServiceType::GooglePlaces:
+        return true;
     default:
         return false;
     }
@@ -89,6 +91,8 @@ QString CitySearchServiceFactory::serviceDescription(ServiceType type)
         return "OpenStreetMap Nominatim search service - free, no API key required";
     case ServiceType::Mock:
         return "Mock service for testing - returns predefined test data";
+    case ServiceType::GooglePlaces:
+        return "Google Places";
     default:
         return "Unknown service";
     }
@@ -120,28 +124,10 @@ std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createMockService(
 }
 
 std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createGooglePlacesService(
-    const ServiceConfiguration& config, QObject* parent)
+    const ServiceConfiguration& config, const QObject* parent)
 {
     Q_UNUSED(config)
     Q_UNUSED(parent)
     qWarning() << "GooglePlacesService not yet implemented";
     return nullptr;
 }
-
-std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createOpenCageService(
-    const ServiceConfiguration& config, QObject* parent)
-{
-    Q_UNUSED(config)
-    Q_UNUSED(parent)
-    qWarning() << "OpenCageService not yet implemented";
-    return nullptr;
-}
-
-std::unique_ptr<ICitySearchService> CitySearchServiceFactory::createBingMapsService(
-    const ServiceConfiguration& config, QObject* parent)
-{
-    Q_UNUSED(config)
-    Q_UNUSED(parent)
-    qWarning() << "BingMapsService not yet implemented";
-    return nullptr;
-} 

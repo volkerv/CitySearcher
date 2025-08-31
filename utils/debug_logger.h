@@ -8,8 +8,7 @@
  * @brief Static utility class for debug and error logging with automatic source location tracking
  * 
  * This utility class provides static methods for logging that can be used by any class
- * without requiring inheritance. Uses C++20 std::source_location for automatic 
- * file/line/function tracking.
+ * without requiring inheritance. Uses std::source_location for automatic file/line/function tracking.
  * 
  * Usage:
  *   Log::debug("This is a debug message");
@@ -67,10 +66,10 @@ public:
 
 private:
     // Private constructor - this is a utility class
-    Log() = delete;
+    Log() = default;
     
     // Internal logging implementation
-    static void logWithLevel(LogLevel messageLevel,
+    static void logWithLevel(const LogLevel messageLevel,
                            const QString& levelName,
                            const QString& message,
                            const std::source_location& location) {
@@ -86,8 +85,7 @@ private:
             logMessage = QString("[%1:%2 in %3] %4")
                            .arg(QString::fromLatin1(location.file_name()).split('/').last())
                            .arg(location.line())
-                           .arg(QString::fromLatin1(location.function_name()))
-                           .arg(message);
+                           .arg(QString::fromLatin1(location.function_name()), message);
         } else {
             logMessage = message;
         }

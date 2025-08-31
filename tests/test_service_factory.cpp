@@ -163,9 +163,7 @@ void TestServiceFactory::testAvailableServices()
     
     // Should not contain unimplemented services
     QVERIFY(!available.contains("GooglePlaces"));
-    QVERIFY(!available.contains("OpenCage"));
-    QVERIFY(!available.contains("BingMaps"));
-    
+
     // Should be reasonable number of services
     QVERIFY(available.size() >= 2);
     QVERIFY(available.size() <= 10); // Sanity check

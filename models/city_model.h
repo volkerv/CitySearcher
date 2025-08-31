@@ -16,7 +16,7 @@ class CityModel : public QObject
 
 public:
     explicit CityModel(QObject *parent = nullptr);
-    CityModel(const QString &name, const QString &displayName, const QString &country, 
+    CityModel(QString name, QString displayName, QString country,
               double latitude, double longitude, QObject *parent = nullptr);
 
     QString name() const;
@@ -34,7 +34,6 @@ public:
     double longitude() const;
     void setLongitude(double longitude);
 
-    // C++20 three-way comparison for efficient sorting and comparison
     std::partial_ordering operator<=>(const CityModel& other) const;
     bool operator==(const CityModel& other) const;
 
@@ -46,9 +45,9 @@ signals:
     void longitudeChanged();
 
 private:
-    QString m_name;
-    QString m_displayName;
-    QString m_country;
-    double m_latitude;
-    double m_longitude;
+    QString name_;
+    QString display_name_;
+    QString country_;
+    double latitude_;
+    double longitude_;
 }; 

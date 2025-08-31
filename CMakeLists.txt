@@ -4,6 +4,7 @@ project(CitySearcher VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(ENV{Qt6_DIR} /Users/volker/Qt/6.9.1/macos/lib/cmake/Qt6)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick Network LinguistTools)
 

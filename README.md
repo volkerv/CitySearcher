@@ -207,8 +207,6 @@ mock->setCustomResults(customCities);
 ### Future Services
 The architecture supports easy addition of new services:
 - Google Places API
-- OpenCage Geocoding
-- Bing Maps API
 
 &nbsp;
 ## **Internationalization**
@@ -261,13 +259,6 @@ mockService->setSimulateErrors(false);        // No errors
 CitySearchViewModel viewModel(std::move(mockService));
 // Test viewModel functionality...
 ```
-
-### Code Style
-
-- **Modern C++**: Uses C++20 features (constexpr, std::string_view, concepts)
-- **Qt Conventions**: Follows Qt naming and design patterns
-- **RAII**: Proper resource management with smart pointers
-- **const-correctness**: Extensive use of const methods and immutable data
 
 &nbsp;
 ## **License**

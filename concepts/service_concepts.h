@@ -46,12 +46,3 @@ concept CityLike = requires(const T* t) {
     { t->longitude() } -> std::convertible_to<double>;
 };
 
-/**
- * @brief Concept for comparable types
- * 
- * Ensures types support three-way comparison
- */
-template<typename T>
-concept ThreeWayComparable = requires(const T& a, const T& b) {
-    { a <=> b } -> std::convertible_to<std::partial_ordering>;
-}; 

@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 find_package(Qt6 REQUIRED COMPONENTS Test Core Quick Network)
+set(ENV{Qt6_DIR} /Users/volker/Qt/6.9.1/macos/lib/cmake/Qt6)
 
 # Enable Qt's automatic MOC, UIC and RCC processing
 set(CMAKE_AUTOMOC ON)

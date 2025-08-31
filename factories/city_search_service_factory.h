@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <memory>
+#include <utility>
 #include "../interfaces/icity_search_service.h"
 #include "../concepts/service_concepts.h"
 
@@ -23,14 +24,11 @@ public:
     enum class ServiceType {
         Nominatim,      // OpenStreetMap Nominatim service
         GooglePlaces,   // Google Places API (future implementation)
-        OpenCage,       // OpenCage Geocoding API (future implementation)
-        BingMaps,       // Bing Maps API (future implementation)
         Mock            // Mock service for testing
     };
 
     /**
      * @brief Service configuration for API keys, endpoints, etc.
-     * C++20 designated initializers support
      */
     struct ServiceConfiguration {
         QString apiKey{};
@@ -41,7 +39,7 @@ public:
         int timeoutMs{10000};
         
         ServiceConfiguration() = default;
-        explicit ServiceConfiguration(const QString& key) : apiKey(key) {}
+        explicit ServiceConfiguration(QString  key) : apiKey(std::move(key)) {}
     };
 
     // Factory methods
@@ -65,7 +63,6 @@ public:
     static bool requiresApiKey(ServiceType type);
     static QString serviceDescription(ServiceType type);
     
-    // C++20 concept-based factory methods for type safety
     template<CitySearchServiceConcept ServiceType>
     static std::unique_ptr<ServiceType> createTypedService(QObject* parent = nullptr) {
         return std::make_unique<ServiceType>(parent);
@@ -81,7 +78,7 @@ public:
 
 private:
     // Private constructor - this is a utility class
-    CitySearchServiceFactory() = delete;
+    CitySearchServiceFactory() = default;
     
     // Helper methods for creating specific services
     static std::unique_ptr<ICitySearchService> createNominatimService(
@@ -91,9 +88,5 @@ private:
     
     // Future service creators
     static std::unique_ptr<ICitySearchService> createGooglePlacesService(
-        const ServiceConfiguration& config, QObject* parent);
-    static std::unique_ptr<ICitySearchService> createOpenCageService(
-        const ServiceConfiguration& config, QObject* parent);
-    static std::unique_ptr<ICitySearchService> createBingMapsService(
-        const ServiceConfiguration& config, QObject* parent);
-}; 
+        const ServiceConfiguration& config, const QObject* parent);
+};

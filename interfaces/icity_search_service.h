@@ -19,30 +19,30 @@ class ICitySearchService : public QObject
 
 public:
     explicit ICitySearchService(QObject* parent = nullptr) : QObject(parent) {}
-    virtual ~ICitySearchService() = default;
+    ~ICitySearchService() override = default;
 
     // Core search functionality (pure virtual - must be implemented)
     virtual void searchCities(const QString& query) = 0;
     virtual void cancelSearch() = 0;
-    virtual bool isSearching() const = 0;
+    [[nodiscard]] virtual bool isSearching() const = 0;
 
     // Service metadata (pure virtual - must be implemented)
-    virtual QString serviceName() const = 0;
-    virtual QString serviceVersion() const = 0;
-    virtual QStringList supportedFeatures() const = 0;
+    [[nodiscard]] virtual QString serviceName() const = 0;
+    [[nodiscard]] virtual QString serviceVersion() const = 0;
+    [[nodiscard]] virtual QStringList supportedFeatures() const = 0;
 
     // Optional advanced features (with default implementations)
-    virtual bool supportsAutoComplete() const { return false; }
-    virtual bool requiresApiKey() const { return false; }
-    virtual int rateLimitPerMinute() const { return 60; }
-    virtual QStringList supportedCountries() const { return QStringList(); } // Empty = all countries
-    virtual QString serviceDescription() const { return QString(); }
+    [[nodiscard]] virtual bool supportsAutoComplete() const { return false; }
+    [[nodiscard]] virtual bool requiresApiKey() const { return false; }
+    [[nodiscard]] virtual int rateLimitPerMinute() const { return 60; }
+    [[nodiscard]] virtual QStringList supportedCountries() const { return {}; } // Empty = all countries
+    [[nodiscard]] virtual QString serviceDescription() const { return {}; }
 
     // Service health and diagnostics
-    virtual bool isServiceAvailable() const { return true; }
-    virtual QString lastErrorMessage() const { return QString(); }
-    virtual int successfulRequestsCount() const { return 0; }
-    virtual int failedRequestsCount() const { return 0; }
+    [[nodiscard]] virtual bool isServiceAvailable() const { return true; }
+    [[nodiscard]] virtual QString lastErrorMessage() const { return {}; }
+    [[nodiscard]] virtual int successfulRequestsCount() const { return 0; }
+    [[nodiscard]] virtual int failedRequestsCount() const { return 0; }
 
 signals:
     // Core signals that all implementations must emit

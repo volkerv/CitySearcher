@@ -6,14 +6,13 @@
 #include "../models/city_list_model.h"
 #include "../models/city_model.h"
 #include "../interfaces/icity_search_service.h"
-#include "../factories/city_search_service_factory.h"
 
 class CitySearchViewModel : public QObject
 {
     Q_OBJECT
     
 private:
-    static constexpr const char* OPENSTREETMAP_URL_TEMPLATE = "https://www.openstreetmap.org/#map=15/%1/%2";
+    static constexpr auto OPENSTREETMAP_URL_TEMPLATE = "https://www.openstreetmap.org/#map=15/%1/%2";
     QML_ELEMENT
     
     Q_PROPERTY(CityListModel* cityListModel READ cityListModel CONSTANT)
@@ -28,12 +27,12 @@ public:
     
     // Service management
     Q_INVOKABLE void setServiceType(const QString& serviceTypeName);
-    Q_INVOKABLE QString currentServiceName() const;
-    Q_INVOKABLE QStringList availableServices() const;
+    Q_INVOKABLE [[nodiscard]] QString currentServiceName() const;
+    Q_INVOKABLE [[nodiscard]] static QStringList availableServices();
 
-    CityListModel* cityListModel() const;
-    bool isSearching() const;
-    QString errorMessage() const;
+    [[nodiscard]] CityListModel* cityListModel() const;
+    [[nodiscard]] bool isSearching() const;
+    [[nodiscard]] QString errorMessage() const;
 
     Q_INVOKABLE void searchCities(const QString &query);
     Q_INVOKABLE void clearResults();
@@ -42,9 +41,9 @@ public:
     Q_INVOKABLE void openCityInBrowser(double latitude, double longitude, const QString& cityName = QString());
     
     // Service information (for debugging/monitoring)
-    Q_INVOKABLE QString serviceDescription() const;
-    Q_INVOKABLE int successfulRequests() const;
-    Q_INVOKABLE int failedRequests() const;
+    Q_INVOKABLE [[nodiscard]] QString serviceDescription() const;
+    Q_INVOKABLE [[nodiscard]] int successfulRequests() const;
+    Q_INVOKABLE [[nodiscard]] int failedRequests() const;
 
 signals:
     void isSearchingChanged();

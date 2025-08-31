@@ -3,6 +3,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include "factories/city_search_service_factory.h"
+
 CitySearchViewModel::CitySearchViewModel(QObject *parent)
     : QObject(parent)
     , cityListModel_(new CityListModel(this))
@@ -39,13 +41,14 @@ QString CitySearchViewModel::errorMessage() const
 
 void CitySearchViewModel::setServiceType(const QString& serviceTypeName)
 {
-    auto serviceType = CitySearchServiceFactory::serviceTypeFromString(serviceTypeName);
+    const auto serviceType = CitySearchServiceFactory::serviceTypeFromString(serviceTypeName);
     
     if (!CitySearchServiceFactory::isServiceAvailable(serviceType)) {
         setErrorMessage(QString("Service '%1' is not available").arg(serviceTypeName));
         return;
     }
-    
+
+    // ReSharper disable once CppTooWideScope
     auto newService = CitySearchServiceFactory::createService(serviceType, this);
     if (newService) {
         setSearchService(std::move(newService));
@@ -61,7 +64,7 @@ QString CitySearchViewModel::currentServiceName() const
     return searchService_ ? searchService_->serviceName() : "None";
 }
 
-QStringList CitySearchViewModel::availableServices() const
+QStringList CitySearchViewModel::availableServices()
 {
     return CitySearchServiceFactory::availableServices();
 }
@@ -133,7 +136,7 @@ void CitySearchViewModel::onServiceCitiesFound(const QList<CityModel*>& cities)
     }
     
     cityListModel_->addCities(citiesCopy);
-    emit searchCompleted(cities.size());
+    emit searchCompleted(static_cast<int>(cities.size()));
 }
 
 void CitySearchViewModel::onServiceSearchError(const QString& errorMessage)
@@ -187,7 +190,12 @@ void CitySearchViewModel::setSearchService(std::unique_ptr<ICitySearchService> s
 {
     // Disconnect old service if any
     if (searchService_) {
-        searchService_->disconnect(this);
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const auto res = searchService_->disconnect(this);
+        if (!res)
+        {
+            qDebug() << "Error disconnecting from search service";
+        }
     }
     
     // Set new service
