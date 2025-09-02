@@ -63,11 +63,9 @@ void CityListModel::addCity(CityModel *city)
         }
     }
 
-    beginInsertRows(QModelIndex(), static_cast<int>(cities_.size()), static_cast<int>(cities_.size()));
     cities_.append(city);
     city->setParent(this);
-    endInsertRows();
-    
+
     sortCities();
 }
 
@@ -98,13 +96,11 @@ void CityListModel::addCities(std::span<CityModel* const> cities)
     if (uniqueCities.isEmpty())
         return;
 
-    beginInsertRows(QModelIndex(), static_cast<int>(cities_.size()), static_cast<int>(cities_.size() + uniqueCities.size() - 1));
     for (CityModel *city : uniqueCities) {
         cities_.append(city);
         city->setParent(this);
     }
-    endInsertRows();
-    
+
     sortCities();
 }
 
@@ -117,6 +113,7 @@ void CityListModel::sortCities()
     };
     
     std::ranges::sort(cities_, compareCities);
+
     endResetModel();
 }
 
