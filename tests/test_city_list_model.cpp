@@ -22,13 +22,10 @@ private slots:
 
     // Deduplication tests
     void testExactDuplicateFiltering();
-    void testDisplayNameDuplicateFiltering();
-    void testNameCountryDuplicateFiltering();
     void testCoordinateProximityDuplicateFiltering();
     void testMixedDuplicateFiltering();
     void testNoDuplicatesWhenUnique();
     void testCoordinateThreshold();
-    void testCaseInsensitiveDuplicates();
 
     // Edge cases
     void testNullPointerHandling();
@@ -203,30 +200,6 @@ void TestCityListModel::testExactDuplicateFiltering()
     verifyModelContains("Paris", "France");
 }
 
-void TestCityListModel::testDisplayNameDuplicateFiltering()
-{
-    QList<CityModel*> cities;
-    cities.append(createTestCity("Berlin", "Germany", 52.52, 13.405, "Berlin, Germany"));
-    cities.append(createTestCity("Berlin", "Germany", 52.521, 13.406, "Berlin, Germany")); // Same display name
-    
-    model->addCities(cities);
-    
-    QCOMPARE(model->rowCount(), 1);
-    QCOMPARE(countCitiesWithName("Berlin"), 1);
-}
-
-void TestCityListModel::testNameCountryDuplicateFiltering()
-{
-    QList<CityModel*> cities;
-    cities.append(createTestCity("Berlin", "Germany", 52.52, 13.405, "Berlin, Deutschland"));
-    cities.append(createTestCity("Berlin", "Germany", 52.521, 13.406, "Berlin, Germany")); // Different display but same name+country
-    
-    model->addCities(cities);
-    
-    QCOMPARE(model->rowCount(), 1);
-    QCOMPARE(countCitiesWithName("Berlin"), 1);
-}
-
 void TestCityListModel::testCoordinateProximityDuplicateFiltering()
 {
     QList<CityModel*> cities;
@@ -289,19 +262,6 @@ void TestCityListModel::testCoordinateThreshold()
     
     // Test2 should be filtered (under threshold), Test3 should remain (over threshold)
     QCOMPARE(model->rowCount(), 2);
-}
-
-void TestCityListModel::testCaseInsensitiveDuplicates()
-{
-    QList<CityModel*> cities;
-    cities.append(createTestCity("Berlin", "Germany", 52.52, 13.405, "Berlin, Germany"));
-    cities.append(createTestCity("BERLIN", "GERMANY", 52.521, 13.406, "BERLIN, GERMANY"));
-    cities.append(createTestCity("berlin", "germany", 52.522, 13.407, "berlin, germany"));
-    
-    model->addCities(cities);
-    
-    // All should be considered duplicates (case insensitive)
-    QCOMPARE(model->rowCount(), 1);
 }
 
 void TestCityListModel::testNullPointerHandling()

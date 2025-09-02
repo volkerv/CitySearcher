@@ -51,7 +51,7 @@ signals:
     void searchCompleted(int resultCount);
 
 private slots:
-    void onServiceCitiesFound(const QList<CityModel*>& cities) const;
+    void onServiceCitiesFound(const QList<CityModel*>& cities);
     void onServiceSearchError(const QString& errorMessage);
     void onServiceSearchStarted();
     void onServiceSearchFinished();

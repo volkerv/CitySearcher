@@ -126,9 +126,10 @@ int CitySearchViewModel::failedRequests() const
     return searchService_ ? searchService_->failedRequestsCount() : 0;
 }
 
-void CitySearchViewModel::onServiceCitiesFound(const QList<CityModel*>& cities) const
+void CitySearchViewModel::onServiceCitiesFound(const QList<CityModel*>& cities)
 {
     cityListModel_->addCities(cities);
+    emit searchCompleted(static_cast<int>(cities.size()));
 }
 
 void CitySearchViewModel::onServiceSearchError(const QString& errorMessage)
