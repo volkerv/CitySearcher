@@ -12,15 +12,15 @@ CityListModel::CityListModel(QObject *parent)
 int CityListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return static_cast<int>(m_cities.size());
+    return static_cast<int>(cities_.size());
 }
 
 QVariant CityListModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= m_cities.size())
+    if (!index.isValid() || index.row() >= cities_.size())
         return {};
 
-    const CityModel *city = m_cities.at(index.row());
+    const CityModel *city = cities_.at(index.row());
 
     switch (role) {
     case NameRole:
@@ -55,7 +55,7 @@ void CityListModel::addCity(CityModel *city)
         return;
 
     // Check for duplicates before adding
-    for (const CityModel* existingCity : std::as_const(m_cities)) {
+    for (const CityModel* existingCity : std::as_const(cities_)) {
         if (isDuplicate(city, existingCity)) {
             qDebug() << "CityListModel: Skipping duplicate city:" << city->displayName();
             city->deleteLater(); // Clean up the duplicate
@@ -63,8 +63,8 @@ void CityListModel::addCity(CityModel *city)
         }
     }
 
-    beginInsertRows(QModelIndex(), static_cast<int>(m_cities.size()), static_cast<int>(m_cities.size()));
-    m_cities.append(city);
+    beginInsertRows(QModelIndex(), static_cast<int>(cities_.size()), static_cast<int>(cities_.size()));
+    cities_.append(city);
     city->setParent(this);
     endInsertRows();
     
@@ -73,18 +73,18 @@ void CityListModel::addCity(CityModel *city)
 
 void CityListModel::clear()
 {
-    if (m_cities.isEmpty())
+    if (cities_.isEmpty())
         return;
 
     beginResetModel();
-    qDeleteAll(m_cities);
-    m_cities.clear();
+    qDeleteAll(cities_);
+    cities_.clear();
     endResetModel();
 }
 
 int CityListModel::count() const
 {
-    return static_cast<int>(m_cities.size());
+    return static_cast<int>(cities_.size());
 }
 
 void CityListModel::addCities(std::span<CityModel* const> cities)
@@ -98,9 +98,9 @@ void CityListModel::addCities(std::span<CityModel* const> cities)
     if (uniqueCities.isEmpty())
         return;
 
-    beginInsertRows(QModelIndex(), static_cast<int>(m_cities.size()), static_cast<int>(m_cities.size() + uniqueCities.size() - 1));
+    beginInsertRows(QModelIndex(), static_cast<int>(cities_.size()), static_cast<int>(cities_.size() + uniqueCities.size() - 1));
     for (CityModel *city : uniqueCities) {
-        m_cities.append(city);
+        cities_.append(city);
         city->setParent(this);
     }
     endInsertRows();
@@ -116,7 +116,7 @@ void CityListModel::sortCities()
         return a->displayName().toLower() < b->displayName().toLower();
     };
     
-    std::ranges::sort(m_cities, compareCities);
+    std::ranges::sort(cities_, compareCities);
     endResetModel();
 }
 
@@ -125,7 +125,7 @@ QList<CityModel*> CityListModel::filterDuplicates(std::span<CityModel* const> ci
     QList<CityModel*> uniqueCities;
     int duplicatesRemoved = 0;
     
-    // Use ranges to filter out null pointers first
+        // Use ranges to filter out null pointers first
     auto validCities = cities | std::ranges::views::filter([](const auto* city) {
         return city != nullptr; 
     });
@@ -134,7 +134,7 @@ QList<CityModel*> CityListModel::filterDuplicates(std::span<CityModel* const> ci
         bool isDuplicateFound = false;
         
         // Check against existing cities using ranges
-        if (std::ranges::any_of(m_cities, [newCity](const auto* existing) {
+        if (std::ranges::any_of(cities_, [newCity](const auto* existing) {
             return isDuplicate(newCity, existing);
         })) {
             isDuplicateFound = true;
@@ -206,7 +206,7 @@ bool CityListModel::containsDuplicates(std::span<CityModel* const> cities) const
 {
     // Use ranges to check for duplicates efficiently
     return std::ranges::any_of(cities, [this](const auto* newCity) {
-        return newCity && std::ranges::any_of(m_cities, [newCity](const auto* existing) {
+        return newCity && std::ranges::any_of(cities_, [newCity](const auto* existing) {
             return isDuplicate(newCity, existing);
         });
     });

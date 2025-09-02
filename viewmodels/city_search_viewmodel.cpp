@@ -126,17 +126,9 @@ int CitySearchViewModel::failedRequests() const
     return searchService_ ? searchService_->failedRequestsCount() : 0;
 }
 
-void CitySearchViewModel::onServiceCitiesFound(const QList<CityModel*>& cities)
+void CitySearchViewModel::onServiceCitiesFound(const QList<CityModel*>& cities) const
 {
-    // Transfer ownership of cities to the list model
-    QList<CityModel*> citiesCopy;
-    for (auto* city : cities) {
-        citiesCopy.append(city);
-        city->setParent(cityListModel_); // Transfer ownership
-    }
-    
-    cityListModel_->addCities(citiesCopy);
-    emit searchCompleted(static_cast<int>(cities.size()));
+    cityListModel_->addCities(cities);
 }
 
 void CitySearchViewModel::onServiceSearchError(const QString& errorMessage)

@@ -33,8 +33,7 @@ public:
     Q_INVOKABLE [[nodiscard]] int count() const;
 
     void addCities(std::span<CityModel* const> cities);
-    
-    // Legacy overload for QList compatibility
+
     void addCities(const QList<CityModel*> &cities) {
         addCities(std::span{cities});
     }
@@ -46,5 +45,5 @@ private:
     static bool areCoordinatesClose(double lat1, double lon1, double lat2, double lon2) ;
     [[nodiscard]] bool containsDuplicates(std::span<CityModel* const> cities) const;
     
-    QList<CityModel*> m_cities;
+    QList<CityModel*> cities_;
 }; 
