@@ -125,7 +125,7 @@ QList<CityModel*> CityListModel::filterDuplicates(std::span<CityModel* const> ci
     QList<CityModel*> uniqueCities;
     int duplicatesRemoved = 0;
     
-        // Use ranges to filter out null pointers first
+    // Use ranges to filter out null pointers first
     auto validCities = cities | std::ranges::views::filter([](const auto* city) {
         return city != nullptr; 
     });
@@ -169,21 +169,9 @@ bool CityListModel::isDuplicate(const CityModel* newCity, const CityModel* exist
         return false;
     }
     
-    // Check for exact display name match (most common duplicate case)
-    if (newCity->displayName().compare(existingCity->displayName(), Qt::CaseInsensitive) == 0) {
-        return true;
-    }
-    
-    // Check for same city name and country (handles different formatting)
-    if (newCity->name().compare(existingCity->name(), Qt::CaseInsensitive) == 0 &&
-        newCity->country().compare(existingCity->country(), Qt::CaseInsensitive) == 0) {
-        return true;
-    }
-    
     // Check for very close coordinates (within ~100 meters)
-    // This catches cases where the same location has slightly different names or formatting
     if (areCoordinatesClose(newCity->latitude(), newCity->longitude(),
-                           existingCity->latitude(), existingCity->longitude())) {
+        existingCity->latitude(), existingCity->longitude())) {
         return true;
     }
     
@@ -195,9 +183,9 @@ bool CityListModel::areCoordinatesClose(const double lat1, const double lon1, co
     // Use a simple distance threshold for duplicate detection
     // Approximately 0.001 degrees = ~100 meters
     constexpr double COORDINATE_THRESHOLD = 0.001;
-    
-    double latDiff = qAbs(lat1 - lat2);
-    double lonDiff = qAbs(lon1 - lon2);
+
+    const double latDiff = qAbs(lat1 - lat2);
+    const double lonDiff = qAbs(lon1 - lon2);
     
     return (latDiff < COORDINATE_THRESHOLD && lonDiff < COORDINATE_THRESHOLD);
 }
