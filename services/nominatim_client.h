@@ -36,7 +36,7 @@ private slots:
     void onNetworkError(QNetworkReply::NetworkError error);
 
 private:
-    QUrl buildSearchUrl(const NominatimSearchRequest& request) const;
+    static QUrl buildSearchUrl(const NominatimSearchRequest& request) ;
     void cleanupCurrentRequest();
     
     // API Constants

@@ -55,7 +55,7 @@ private slots:
 
 private:
     void parseJsonResponse(const QByteArray& jsonData);
-    CityModel* createCityFromJson(const QJsonObject& cityJson);
+    static CityModel* createCityFromJson(const QJsonObject& cityJson);
     void updateStats(bool success, const QString& errorMessage = QString());
     
     // JSON field constants

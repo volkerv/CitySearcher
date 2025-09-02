@@ -39,14 +39,14 @@ void NominatimService::searchCities(const QString& query)
     Log::info(QString("Search query: %1").arg(query));
     
     if (query.trimmed().isEmpty()) {
-        QString error = "Please enter a search query";
+        const QString error = "Please enter a search query";
         Log::error(error);
         updateStats(false, error);
         emit searchError(error);
         return;
     }
-    
-    NominatimSearchRequest request(query);
+
+    const NominatimSearchRequest request(query);
     Log::debug("Sending request to Nominatim API");
     client_->searchAsync(request);
 }
@@ -87,12 +87,12 @@ void NominatimService::parseJsonResponse(const QByteArray& jsonData)
 {
     Log::debug("Parsing Nominatim API response");
     Log::info(QString("Response size: %1 bytes").arg(jsonData.size()));
-    
+
     QJsonParseError parseError;
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData, &parseError);
+    const QJsonDocument doc = QJsonDocument::fromJson(jsonData, &parseError);
     
     if (parseError.error != QJsonParseError::NoError) {
-        QString error = QString("JSON parse error: %1").arg(parseError.errorString());
+        const QString error = QString("JSON parse error: %1").arg(parseError.errorString());
         Log::error(error);
         updateStats(false, error);
         emit searchError(error);
@@ -100,7 +100,7 @@ void NominatimService::parseJsonResponse(const QByteArray& jsonData)
     }
 
     if (!doc.isArray()) {
-        QString error = "Invalid response format";
+        const QString error = "Invalid response format";
         Log::error(error);
         updateStats(false, error);
         emit searchError(error);
@@ -111,11 +111,12 @@ void NominatimService::parseJsonResponse(const QByteArray& jsonData)
     Log::debug(QString("Processing %1 results from API").arg(results.size()));
     QList<CityModel*> cities;
 
-    for (const auto &value : std::as_const(results)) {
+    for (const auto &value : results) {
         if (!value.isObject())
             continue;
 
         QJsonObject cityJson = value.toObject();
+        // ReSharper disable once CppTooWideScope
         CityModel *city = createCityFromJson(cityJson);
         if (city) {
             cities.append(city);
@@ -131,19 +132,20 @@ void NominatimService::parseJsonResponse(const QByteArray& jsonData)
         updateStats(true);
         emit citiesFound(cities);
     } else {
-        QString error = "No cities found for your search query";
+        const QString error = "No cities found for your search query";
         Log::warning(error);
         updateStats(false, error);
         emit searchError(error);
     }
+    // ReSharper disable once CppDFAMemoryLeak
 }
 
 CityModel* NominatimService::createCityFromJson(const QJsonObject &cityJson)
 {
     // Extract basic information
-    QString displayName = cityJson[JSON_DISPLAY_NAME.data()].toString();
-    double latitude = cityJson[JSON_LATITUDE.data()].toString().toDouble();
-    double longitude = cityJson[JSON_LONGITUDE.data()].toString().toDouble();
+    const QString displayName = cityJson[JSON_DISPLAY_NAME.data()].toString();
+    const double latitude = cityJson[JSON_LATITUDE.data()].toString().toDouble();
+    const double longitude = cityJson[JSON_LONGITUDE.data()].toString().toDouble();
     
     // Extract address details
     QJsonObject address = cityJson[JSON_ADDRESS.data()].toObject();
@@ -172,6 +174,7 @@ CityModel* NominatimService::createCityFromJson(const QJsonObject &cityJson)
         return nullptr;
     }
 
+    // ReSharper disable once CppDFAMemoryLeak
     return new CityModel(cityName, displayName, country, latitude, longitude);
 }
 

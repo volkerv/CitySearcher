@@ -217,9 +217,9 @@ QList<CityModel*> MockCitySearchService::createMockCities(const QString& query)
     
     // Filter mock data based on query
     for (const auto& data : std::as_const(mockData)) {
-        if (data.name.toLower().contains(lowerQuery) || 
-            data.country.toLower().contains(lowerQuery) ||
-            lowerQuery.contains(data.name.toLower())) {
+        if (data.name.contains(lowerQuery, Qt::CaseInsensitive) ||
+            data.country.contains(lowerQuery, Qt::CaseInsensitive) ||
+            lowerQuery.contains(data.name, Qt::CaseInsensitive)) {
             
             QString displayName = QString("%1, %2").arg(data.name, data.country);
             auto* city = new CityModel(data.name, displayName, data.country,
@@ -248,7 +248,7 @@ QList<CityModel*> MockCitySearchService::createMockCities(const QString& query)
         for (int i = 0; i < qMin(3, lowerQuery.length()); ++i) {
             QString mockName = QString("Mock City %1 (%2)").arg(i + 1).arg(query);
             QString mockCountry = "Mock Country";
-            QString displayName = QString("%1, %2").arg(mockName).arg(mockCountry);
+            QString displayName = QString("%1, %2").arg(mockName, mockCountry);
             double lat = 50.0 + (i * 0.1);
             double lon = 10.0 + (i * 0.1);
             

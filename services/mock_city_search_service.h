@@ -23,25 +23,25 @@ public:
     // ICitySearchService interface implementation
     void searchCities(const QString& query) override;
     void cancelSearch() override;
-    bool isSearching() const override;
+    [[nodiscard]] bool isSearching() const override;
     
     // Service metadata implementation
-    QString serviceName() const override;
-    QString serviceVersion() const override;
-    QStringList supportedFeatures() const override;
+    [[nodiscard]] QString serviceName() const override;
+    [[nodiscard]] QString serviceVersion() const override;
+    [[nodiscard]] QStringList supportedFeatures() const override;
     
     // Optional features implementation
-    bool supportsAutoComplete() const override { return true; }
-    bool requiresApiKey() const override { return false; }
-    int rateLimitPerMinute() const override { return 1000; } // Very high for mock
-    QStringList supportedCountries() const override { return {"US", "DE", "FR", "UK"}; }
-    QString serviceDescription() const override;
+    [[nodiscard]] bool supportsAutoComplete() const override { return true; }
+    [[nodiscard]] bool requiresApiKey() const override { return false; }
+    [[nodiscard]] int rateLimitPerMinute() const override { return 1000; } // Very high for mock
+    [[nodiscard]] QStringList supportedCountries() const override { return {"US", "DE", "FR", "UK"}; }
+    [[nodiscard]] QString serviceDescription() const override;
     
     // Service health implementation
-    bool isServiceAvailable() const override { return true; }
-    QString lastErrorMessage() const override { return lastError_; }
-    int successfulRequestsCount() const override { return successCount_; }
-    int failedRequestsCount() const override { return failureCount_; }
+    [[nodiscard]] bool isServiceAvailable() const override { return true; }
+    [[nodiscard]] QString lastErrorMessage() const override { return lastError_; }
+    [[nodiscard]] int successfulRequestsCount() const override { return successCount_; }
+    [[nodiscard]] int failedRequestsCount() const override { return failureCount_; }
     
     // Mock-specific configuration
     void setSimulateNetworkDelay(bool enable, int delayMs = 500);
@@ -58,7 +58,7 @@ private slots:
 private:
     void updateStats(bool success, const QString& errorMessage = QString());
     QList<CityModel*> createMockCities(const QString& query);
-    bool shouldSimulateError() const;
+    [[nodiscard]] bool shouldSimulateError() const;
     
     // Mock configuration
     bool simulateDelay_ = true;

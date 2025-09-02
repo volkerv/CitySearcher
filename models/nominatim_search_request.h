@@ -10,29 +10,29 @@ public:
     NominatimSearchRequest() = default;
     
     // Constructor with query
-    explicit NominatimSearchRequest(const QString& searchQuery);
+    explicit NominatimSearchRequest(QString  searchQuery);
     
     // Getters
-    QString query() const { return query_; }
-    int limit() const { return limit_; }
-    bool addressDetails() const { return addressDetails_; }
-    QString featureType() const { return featureType_; }
-    QString format() const { return format_; }
+    [[nodiscard]] QString query() const { return query_; }
+    [[nodiscard]] int limit() const { return limit_; }
+    [[nodiscard]] bool addressDetails() const { return addressDetailsEnabled_; }
+    [[nodiscard]] QString featureType() const { return featureType_; }
+    [[nodiscard]] QString format() const { return format_; }
     
     // Setters with validation
     void setQuery(const QString& query);
     void setLimit(int limit);
-    void setAddressDetails(bool enabled);
+    void setAddressDetailsEnabled(bool enabled);
     void setFeatureType(const QString& type);
     void setFormat(const QString& format);
     
     // Validation
-    bool isValid() const;
-    QString validationError() const;
+    [[nodiscard]] bool isValid() const;
+    [[nodiscard]] QString validationError() const;
     
     // URL building helpers
-    QString limitAsString() const;
-    QString addressDetailsAsString() const;
+    [[nodiscard]] QString limitAsString() const;
+    [[nodiscard]] QString addressDetailsAsString() const;
     
 private:
     // API Configuration Constants
@@ -44,7 +44,7 @@ private:
     
     QString query_;
     int limit_ = DEFAULT_LIMIT;
-    bool addressDetails_ = true;
+    bool addressDetailsEnabled_ = true;
     QString featureType_ = DEFAULT_FEATURE_TYPE.data();
     QString format_ = DEFAULT_FORMAT.data();
 }; 

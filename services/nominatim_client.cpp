@@ -21,7 +21,7 @@ void NominatimClient::searchAsync(const NominatimSearchRequest& request)
     cancelCurrentRequest();
     
     // Build URL
-    QUrl url = buildSearchUrl(request);
+    const QUrl url = buildSearchUrl(request);
     qDebug() << "Nominatim request URL:" << url.toString();
     
     // Create network request
@@ -60,7 +60,7 @@ void NominatimClient::onNetworkReplyFinished()
     }
     
     if (currentReply_->error() == QNetworkReply::NoError) {
-        QByteArray data = currentReply_->readAll();
+        const QByteArray data = currentReply_->readAll();
         qDebug() << "Nominatim response size:" << data.size() << "bytes";
         emit searchCompleted(data);
     }
@@ -85,7 +85,7 @@ void NominatimClient::onNetworkError(QNetworkReply::NetworkError error)
     emit requestFinished();
 }
 
-QUrl NominatimClient::buildSearchUrl(const NominatimSearchRequest& request) const
+QUrl NominatimClient::buildSearchUrl(const NominatimSearchRequest& request)
 {
     QUrl url(BASE_URL.data());
     QUrlQuery query;

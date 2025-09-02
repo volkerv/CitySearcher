@@ -1,7 +1,9 @@
 #include "nominatim_search_request.h"
 
-NominatimSearchRequest::NominatimSearchRequest(const QString& searchQuery)
-    : query_(searchQuery)
+#include <utility>
+
+NominatimSearchRequest::NominatimSearchRequest(QString  searchQuery)
+    : query_(std::move(searchQuery))
 {
 }
 
@@ -10,16 +12,16 @@ void NominatimSearchRequest::setQuery(const QString& query)
     query_ = query;
 }
 
-void NominatimSearchRequest::setLimit(int limit)
+void NominatimSearchRequest::setLimit(const int limit)
 {
     if (limit >= MIN_LIMIT && limit <= MAX_LIMIT) {
         limit_ = limit;
     }
 }
 
-void NominatimSearchRequest::setAddressDetails(bool enabled)
+void NominatimSearchRequest::setAddressDetailsEnabled(const bool enabled)
 {
-    addressDetails_ = enabled;
+    addressDetailsEnabled_ = enabled;
 }
 
 void NominatimSearchRequest::setFeatureType(const QString& type)
@@ -59,7 +61,7 @@ QString NominatimSearchRequest::validationError() const
     if (featureType_.isEmpty()) {
         return "Feature type cannot be empty";
     }
-    return QString(); // Valid
+    return {}; // Valid
 }
 
 QString NominatimSearchRequest::limitAsString() const
@@ -69,5 +71,5 @@ QString NominatimSearchRequest::limitAsString() const
 
 QString NominatimSearchRequest::addressDetailsAsString() const
 {
-    return addressDetails_ ? "1" : "0";
+    return addressDetailsEnabled_ ? "1" : "0";
 } 
